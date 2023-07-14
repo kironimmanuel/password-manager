@@ -8,8 +8,9 @@ INVERTED='\x1b[7m'
 
 NC='\033[0m'
 
-PASSWORD_FILE=".passwords"
-MASTER_KEY=".masterkey"
+# The password file must be stored in the same directory as the script
+PASSWORD_FILE="$(dirname "${BASH_SOURCE[0]}")/.passwords"
+MASTER_KEY="$(dirname "${BASH_SOURCE[0]}")/.masterkey"
 
 # Encrypt the string using a simple transformation (Caesar cipher)
 encrypt() {
@@ -18,7 +19,6 @@ encrypt() {
     echo "$encrypted"
 }
 
-# Decrypt the string using the reverse transformation
 decrypt() {
     local input="$1"
     local decrypted=$(echo "$input" | tr 'N-ZA-Mn-za-m' 'A-Za-z')
@@ -66,7 +66,6 @@ get_password() {
     echo -e "${YELLOW}Enter the website or service name:${NC}"
     read website
 
-    # Search for the entry in the password file
     password_entry=$(grep -i "^$website:" "$PASSWORD_FILE" | head -n 1)
 
     if [ -n "$password_entry" ]; then
@@ -122,7 +121,6 @@ delete_password() {
     echo -e "${YELLOW}Enter the website or service name:${NC}"
     read website
 
-    # Search for the entry in the password file
     password_entry=$(grep -i "^$website:" "$PASSWORD_FILE" | head -n 1)
 
     if [ -n "$password_entry" ]; then
